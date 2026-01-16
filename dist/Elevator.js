@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Clock_1 = __importDefault(require("./Clock"));
+const Clock_1 = __importDefault(require("./app/Clock"));
 const LobbyPolicy_1 = __importDefault(require("./LobbyPolicy"));
 const MovementHistory_1 = __importDefault(require("./MovementHistory"));
 class Elevator {

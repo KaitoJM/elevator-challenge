@@ -1,4 +1,4 @@
-import Clock from "./Clock";
+import Clock from "./app/Clock";
 import LobbyPolicy from "./LobbyPolicy";
 import MovementHistory from "./MovementHistory";
 import Person from "./Person";

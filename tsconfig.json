@@ -15,6 +15,14 @@
     "outDir": "./dist",
     "rootDir": "./"
   },
-  "include": ["*.ts", "tests/*.ts"],
+  "include": [
+    "*.ts",
+    "tests/*.ts",
+    "app/Clock.ts",
+    "app/Elevator.ts",
+    "app/LobbyPolicy.ts",
+    "app/MovementHistory.ts",
+    "app/Person.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

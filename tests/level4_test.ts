@@ -1,5 +1,5 @@
-import Elevator from "../Elevator";
-import Person from "../Person";
+import Elevator from "../app/Elevator";
+import Person from "../app/Person";
 import * as chai from "chai";
 
 const { assert } = chai;
