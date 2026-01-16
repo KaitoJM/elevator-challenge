@@ -32,7 +32,7 @@ describe("Level 7: Added Feature Test (Floor history tracking)", () => {
 
     elevator.dispatch();
 
-    console.log(elevator.floorMovementHistory.getData());
+    // console.log(elevator.floorMovementHistory.getData());
 
     // assert.equal(elevator.currentFloor, 0);
     // assert.equal(elevator.requests.length, 0);
