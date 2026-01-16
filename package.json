@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && mocha dist/tests/elevator_test.js",
+    "test": "npm run build && mocha dist/tests/*_test.js",
     "server": "cd web-app-version && nodemon server/index.js"
   },
   "repository": {
