@@ -7,7 +7,7 @@ export default class RecordFloorHistoryContext {
   onBoarding: Array<Person>;
   currentFloor: number;
   stoppedFlag: boolean;
-  lastTrack: FloorMovementTrack;
+  lastTrack: FloorMovementTrack | null;
 
   constructor(
     person: Person | null,
