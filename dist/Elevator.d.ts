@@ -1,5 +1,6 @@
 import Clock from "./Clock";
 import LobbyPolicy from "./LobbyPolicy";
+import MovementHistory from "./MovementHistory";
 import Person from "./Person";
 export default class Elevator {
     currentFloor: number;
@@ -9,6 +10,9 @@ export default class Elevator {
     riders: Array<Person>;
     clock: Clock;
     lobbyPolicy: LobbyPolicy;
+    floorMovementHistory: MovementHistory;
+    stoppedFlag: boolean;
+    activePerson: Person | null;
     constructor(clock: Clock, lobbyPolicy?: LobbyPolicy);
     dispatch(): void;
     handleRequest(person: Person): void;
@@ -22,6 +26,7 @@ export default class Elevator {
     hasPickup(): boolean;
     hasDropOff(): boolean;
     handleIdleState(): void;
+    recordTrack(): void;
     reset(): void;
 }
 //# sourceMappingURL=Elevator.d.ts.map

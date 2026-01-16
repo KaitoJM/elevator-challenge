@@ -1,5 +1,6 @@
 import Clock from "./Clock";
 import LobbyPolicy from "./LobbyPolicy";
+import MovementHistory, { FloorMovementTrack } from "./MovementHistory";
 import Person from "./Person";
 
 export default class Elevator {
@@ -10,10 +11,14 @@ export default class Elevator {
   riders: Array<Person> = [];
   clock: Clock;
   lobbyPolicy: LobbyPolicy;
+  floorMovementHistory: MovementHistory;
+  stoppedFlag: boolean = false;
+  activePerson: Person | null = null;
 
   constructor(clock: Clock, lobbyPolicy?: LobbyPolicy) {
     this.clock = clock || new Clock();
     this.lobbyPolicy = lobbyPolicy || new LobbyPolicy();
+    this.floorMovementHistory = new MovementHistory();
   }
 
   dispatch() {
@@ -50,19 +55,27 @@ export default class Elevator {
   }
 
   onMove() {
+    this.stoppedFlag = false;
     this.floorsTraversed++;
     if (this.hasStop()) {
       this.stops++;
     }
+    this.recordTrack();
   }
 
   pickup(person: Person) {
+    this.activePerson = person;
+    this.stoppedFlag = true;
     this.riders.push(person);
     this.requests.shift();
+    this.recordTrack();
   }
 
   dropOff(person: Person) {
+    this.stoppedFlag = true;
     this.riders = this.riders.filter((r) => r !== person);
+    this.activePerson = null;
+    this.recordTrack();
   }
 
   hasStop() {
@@ -82,6 +95,49 @@ export default class Elevator {
     if (this.lobbyPolicy.shouldReturnToLobby(this.riders.length > 0, hour)) {
       this.moveToFloor(0);
     }
+  }
+
+  recordTrack() {
+    const person = this.activePerson;
+    const history = this.floorMovementHistory.getData();
+
+    // remove pickup duplicate floor
+    if (
+      this.requests.length &&
+      this.requests[0].currentFloor === this.currentFloor &&
+      !person
+    ) {
+      return;
+    }
+
+    if (history.length) {
+      const lastTrack: FloorMovementTrack = history[history.length - 1];
+
+      if (
+        person &&
+        this.currentFloor == lastTrack.floor &&
+        person.name === lastTrack.personName &&
+        this.stoppedFlag == lastTrack.stopped
+      ) {
+        return;
+      }
+
+      // remove dropOff duplicate floor
+      if (
+        this.currentFloor === lastTrack.floor &&
+        this.stoppedFlag !== lastTrack.stopped
+      ) {
+        const indx = history.indexOf(lastTrack);
+        this.floorMovementHistory.updateStopped(indx, this.stoppedFlag);
+        return;
+      }
+    }
+
+    this.floorMovementHistory.pushTrack(
+      this.currentFloor,
+      person?.name as string,
+      this.stoppedFlag
+    );
   }
 
   reset() {
