@@ -1,13 +1,9 @@
 import Clock from "./Clock";
 import LobbyPolicy from "./LobbyPolicy";
-import MovementHistory, { FloorMovementTrack } from "./MovementHistory";
+import MovementHistory from "./MovementHistory";
 import Person from "./Person";
-import RecordFloorHistoryContext from "./services/contexts/RecordFloorHistory.context";
-import RecordFloorHistory from "./services/RecordFloorHistory.pipeline";
-import SkipDuplicatePickupPipe from "./services/pipes/SkipDuplicatePickup.pipe";
-import SkipIdenticalLastTrackPipe from "./services/pipes/SkipIdenticalLastTrack.pipe";
-import MergeDropOffPipe from "./services/pipes/MergeDropOff.pipe";
-import AppendTrackPipe from "./services/pipes/AppendNewTrack.pipe";
+import RecordFloorHistoryContext from "./services/pipelines/contexts/RecordFloorHistory.context";
+import RecordFloorHistoryService from "./services/RecordFloorHistory.service";
 
 export default class Elevator {
   currentFloor: number = 0;
@@ -15,16 +11,19 @@ export default class Elevator {
   floorsTraversed: number = 0;
   requests: Array<Person> = [];
   riders: Array<Person> = [];
+
   clock: Clock;
   lobbyPolicy: LobbyPolicy;
   floorMovementHistory: MovementHistory;
   stoppedFlag: boolean = false;
   activePerson: Person | null = null;
+  createHistoryService: RecordFloorHistoryService;
 
   constructor(clock: Clock, lobbyPolicy?: LobbyPolicy) {
     this.clock = clock || new Clock();
     this.lobbyPolicy = lobbyPolicy || new LobbyPolicy();
     this.floorMovementHistory = new MovementHistory();
+    this.createHistoryService = new RecordFloorHistoryService();
   }
 
   dispatch() {
@@ -112,14 +111,7 @@ export default class Elevator {
       this.stoppedFlag
     );
 
-    const recorder = new RecordFloorHistory([
-      new SkipDuplicatePickupPipe(),
-      new SkipIdenticalLastTrackPipe(),
-      new MergeDropOffPipe(),
-      new AppendTrackPipe(),
-    ]);
-
-    this.floorMovementHistory = recorder.processRecord(context);
+    this.floorMovementHistory = this.createHistoryService.process(context);
   }
 
   reset() {

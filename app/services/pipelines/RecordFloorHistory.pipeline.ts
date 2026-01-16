@@ -1,4 +1,4 @@
-import MovementHistory from "../MovementHistory";
+import MovementHistory from "../../MovementHistory";
 import RecordFloorHistoryContext from "./contexts/RecordFloorHistory.context";
 
 export type PipeResult =

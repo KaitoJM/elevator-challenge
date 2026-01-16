@@ -1,5 +1,5 @@
-import MovementHistory, { FloorMovementTrack } from "../../MovementHistory";
-import Person from "../../Person";
+import MovementHistory, { FloorMovementTrack } from "../../../MovementHistory";
+import Person from "../../../Person";
 
 export default class RecordFloorHistoryContext {
   person: Person | null;
