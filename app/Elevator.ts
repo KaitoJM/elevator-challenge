@@ -11,12 +11,12 @@ export default class Elevator {
   floorsTraversed: number = 0;
   requests: Array<Person> = [];
   riders: Array<Person> = [];
+  stoppedFlag: boolean = false;
+  activePerson: Person | null = null;
 
   clock: Clock;
   lobbyPolicy: LobbyPolicy;
   floorMovementHistory: MovementHistory;
-  stoppedFlag: boolean = false;
-  activePerson: Person | null = null;
   createHistoryService: RecordFloorHistoryService;
 
   constructor(clock: Clock, lobbyPolicy?: LobbyPolicy) {
@@ -120,5 +120,7 @@ export default class Elevator {
     this.floorsTraversed = 0;
     this.requests = [];
     this.riders = [];
+    this.activePerson = null;
+    this.stoppedFlag = false;
   }
 }
