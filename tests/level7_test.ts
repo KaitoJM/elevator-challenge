@@ -1,4 +1,5 @@
 import Elevator from "../app/Elevator";
+import ElevatorController from "../app/ElevatorController";
 import Person from "../app/Person";
 import * as chai from "chai";
 
@@ -17,26 +18,26 @@ class FakeClock {
 }
 
 describe("Level 7: Added Feature Test (Floor history tracking)", () => {
-  let elevator: Elevator;
+  let controller: ElevatorController;
 
   beforeEach(() => {
-    elevator = new Elevator(new FakeClock(10));
+    controller = new ElevatorController(new FakeClock(10));
   });
 
   it("can track floor history", () => {
     const personA = new Person("PersonA", 3, 5);
     const personB = new Person("PersonB", 7, 8);
 
-    elevator.requests.push(personA);
-    elevator.requests.push(personB);
+    controller.requests.push(personA);
+    controller.requests.push(personB);
 
-    elevator.dispatch();
+    controller.dispatch();
 
-    // console.log(elevator.floorMovementHistory.getData());
+    // console.log(controller.floorMovementHistory.getData());
 
-    // assert.equal(elevator.currentFloor, 0);
-    // assert.equal(elevator.requests.length, 0);
-    // assert.equal(elevator.riders.length, 0);
-    // assert.isAtLeast(elevator.floorsTraversed, 13);
+    // assert.equal(controller.currentFloor, 0);
+    // assert.equal(controller.requests.length, 0);
+    // assert.equal(controller.riders.length, 0);
+    // assert.isAtLeast(controller.floorsTraversed, 13);
   });
 });

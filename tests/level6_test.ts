@@ -1,4 +1,5 @@
 import Elevator from "../app/Elevator";
+import ElevatorController from "../app/ElevatorController";
 import Person from "../app/Person";
 import * as chai from "chai";
 
@@ -18,71 +19,75 @@ class FakeClock {
 
 describe("Level 6: Lobby policy and idle behavior", () => {
   it("should return to lobby before noon when no riders", () => {
-    const morningElevator = new Elevator(new FakeClock(10));
+    const morningElevatorController = new ElevatorController(new FakeClock(10));
     const person = new Person("PersonA", 3, 6);
-    morningElevator.requests.push(person);
+    morningElevatorController.requests.push(person);
 
-    morningElevator.dispatch();
+    morningElevatorController.dispatch();
 
-    assert.equal(morningElevator.currentFloor, 0);
-    assert.equal(morningElevator.riders.length, 0);
+    assert.equal(morningElevatorController.elevator.currentFloor, 0);
+    assert.equal(morningElevatorController.riders.length, 0);
   });
 
   it("should stay on last floor after noon when no riders", () => {
-    const afternoonElevator = new Elevator(new FakeClock(14));
+    const afternoonElevatorController = new ElevatorController(
+      new FakeClock(14)
+    );
     const person = new Person("PersonA", 3, 6);
-    afternoonElevator.requests.push(person);
+    afternoonElevatorController.requests.push(person);
 
-    afternoonElevator.dispatch();
+    afternoonElevatorController.dispatch();
 
-    assert.equal(afternoonElevator.currentFloor, 6);
-    assert.equal(afternoonElevator.riders.length, 0);
+    assert.equal(afternoonElevatorController.elevator.currentFloor, 6);
+    assert.equal(afternoonElevatorController.riders.length, 0);
   });
 
   it("should return to lobby at exactly 12:00 PM with no riders", () => {
-    const noonElevator = new Elevator(new FakeClock(12));
+    const noonElevatorController = new ElevatorController(new FakeClock(12));
     const person = new Person("PersonA", 3, 6);
-    noonElevator.requests.push(person);
+    noonElevatorController.requests.push(person);
 
-    noonElevator.dispatch();
+    noonElevatorController.dispatch();
 
-    assert.equal(noonElevator.currentFloor, 6);
+    assert.equal(noonElevatorController.elevator.currentFloor, 6);
   });
 
   it("should not return to lobby before noon if there are still riders", () => {
-    const morningElevator = new Elevator(new FakeClock(10));
+    const morningElevatorController = new ElevatorController(new FakeClock(10));
     const personStill = new Person("PersonStill", 5, 5);
-    morningElevator.currentFloor = 5;
-    morningElevator.riders.push(personStill);
+    morningElevatorController.elevator.currentFloor = 5;
+    morningElevatorController.riders.push(personStill);
 
-    morningElevator.handleIdleState();
+    morningElevatorController.handleIdleState();
 
-    assert.equal(morningElevator.currentFloor, 5);
+    assert.equal(morningElevatorController.elevator.currentFloor, 5);
   });
 
   it("should handle multiple people with morning return to lobby", () => {
-    const morningElevator = new Elevator(new FakeClock(9));
+    const morningElevatorController = new ElevatorController(new FakeClock(9));
     const personA = new Person("PersonA", 2, 5);
     const personB = new Person("PersonB", 4, 8);
 
-    morningElevator.requests.push(personA);
-    morningElevator.requests.push(personB);
+    morningElevatorController.requests.push(personA);
+    morningElevatorController.requests.push(personB);
 
-    morningElevator.dispatch();
+    morningElevatorController.dispatch();
 
-    assert.equal(morningElevator.currentFloor, 0);
+    assert.equal(morningElevatorController.elevator.currentFloor, 0);
   });
 
   it("should handle multiple people with afternoon stay", () => {
-    const afternoonElevator = new Elevator(new FakeClock(15));
+    const afternoonElevatorController = new ElevatorController(
+      new FakeClock(15)
+    );
     const personA = new Person("PersonA", 2, 5);
     const personB = new Person("PersonB", 4, 8);
 
-    afternoonElevator.requests.push(personA);
-    afternoonElevator.requests.push(personB);
+    afternoonElevatorController.requests.push(personA);
+    afternoonElevatorController.requests.push(personB);
 
-    afternoonElevator.dispatch();
+    afternoonElevatorController.dispatch();
 
-    assert.equal(afternoonElevator.currentFloor, 8);
+    assert.equal(afternoonElevatorController.elevator.currentFloor, 8);
   });
 });

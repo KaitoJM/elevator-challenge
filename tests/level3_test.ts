@@ -1,4 +1,5 @@
 import Elevator from "../app/Elevator";
+import ElevatorController from "../app/ElevatorController";
 import Person from "../app/Person";
 import * as chai from "chai";
 
@@ -17,10 +18,12 @@ class FakeClock {
 }
 
 describe("Level 3: Track efficiency metrics", () => {
+  let controller: ElevatorController;
   let elevator: Elevator;
 
   beforeEach(() => {
-    elevator = new Elevator(new FakeClock(10));
+    controller = new ElevatorController(new FakeClock(10));
+    elevator = new Elevator();
   });
 
   it("should initialize with 0 floors traversed", () => {
@@ -40,25 +43,25 @@ describe("Level 3: Track efficiency metrics", () => {
 
   it("should only count stops at floors with pickups or dropoffs", () => {
     const person = new Person("PersonA", 3, 6);
-    elevator.requests.push(person);
-    elevator.dispatch();
+    controller.requests.push(person);
+    controller.dispatch();
 
-    assert.equal(elevator.stops, 2);
-    assert.isAtLeast(elevator.floorsTraversed, 2);
+    assert.equal(controller.elevator.stops, 2);
+    assert.isAtLeast(controller.elevator.floorsTraversed, 2);
   });
 
   it("should have lower efficiency (more floors) when traveling further", () => {
     const person1 = new Person("PersonA", 2, 5);
-    elevator.requests.push(person1);
-    elevator.dispatch();
-    const floorsShort = elevator.floorsTraversed;
+    controller.requests.push(person1);
+    controller.dispatch();
+    const floorsShort = controller.elevator.floorsTraversed;
 
-    elevator.reset();
+    controller.reset();
 
     const person2 = new Person("PersonB", 2, 15);
-    elevator.requests.push(person2);
-    elevator.dispatch();
-    const floorsLong = elevator.floorsTraversed;
+    controller.requests.push(person2);
+    controller.dispatch();
+    const floorsLong = controller.elevator.floorsTraversed;
 
     assert.isBelow(floorsShort, floorsLong);
   });

@@ -1,4 +1,5 @@
 import Elevator from "../app/Elevator";
+import ElevatorController from "../app/ElevatorController";
 import Person from "../app/Person";
 import * as chai from "chai";
 
@@ -17,23 +18,25 @@ class FakeClock {
 }
 
 describe("Level 4: Multiple requests in order", () => {
+  let controller: ElevatorController;
   let elevator: Elevator;
 
   beforeEach(() => {
-    elevator = new Elevator(new FakeClock(10));
+    controller = new ElevatorController(new FakeClock(10));
+    elevator = new Elevator();
   });
 
   it("should handle multiple sequential requests", () => {
     const bob = new Person("Bob", 3, 9);
     const sue = new Person("Sue", 6, 2);
 
-    elevator.requests.push(bob);
-    elevator.requests.push(sue);
+    controller.requests.push(bob);
+    controller.requests.push(sue);
 
-    elevator.dispatch();
-    assert.equal(elevator.floorsTraversed, 18);
+    controller.dispatch();
+    assert.equal(controller.elevator.floorsTraversed, 18);
 
-    const tracking = elevator.floorMovementHistory.getData();
+    const tracking = controller.floorMovementHistory.getData();
     assert.equal(tracking[0].floor, 1);
     assert.equal(tracking[1].floor, 2);
     assert.equal(tracking[2].floor, 3);
@@ -53,20 +56,20 @@ describe("Level 4: Multiple requests in order", () => {
     assert.equal(tracking[16].floor, 1);
     assert.equal(tracking[17].floor, 0);
 
-    assert.equal(elevator.currentFloor, 0);
-    assert.equal(elevator.riders.length, 0);
+    assert.equal(controller.elevator.currentFloor, 0);
+    assert.equal(controller.riders.length, 0);
   });
 
   it("should pick up and drop off people in order of requests", () => {
     const alice = new Person("Alice", 2, 5);
     const bob = new Person("Bob", 4, 8);
 
-    elevator.requests.push(alice);
-    elevator.requests.push(bob);
+    controller.requests.push(alice);
+    controller.requests.push(bob);
 
-    elevator.dispatch();
+    controller.dispatch();
 
-    const tracking = elevator.floorMovementHistory.getData();
+    const tracking = controller.floorMovementHistory.getData();
     assert.equal(tracking[0].floor, 1);
     assert.equal(tracking[1].floor, 2);
     assert.equal(tracking[2].floor, 3);
@@ -96,8 +99,8 @@ describe("Level 4: Multiple requests in order", () => {
     assert.equal(tracking[8].personName, "Bob");
     assert.equal(tracking[9].personName, "Bob");
 
-    assert.equal(elevator.riders.length, 0);
-    assert.equal(elevator.requests.length, 0);
+    assert.equal(controller.riders.length, 0);
+    assert.equal(controller.requests.length, 0);
   });
 
   it("should handle multiple requests with different destinations", () => {
@@ -105,13 +108,13 @@ describe("Level 4: Multiple requests in order", () => {
     const person2 = new Person("Person2", 5, 1);
     const person3 = new Person("Person3", 8, 4);
 
-    elevator.requests.push(person1);
-    elevator.requests.push(person2);
-    elevator.requests.push(person3);
+    controller.requests.push(person1);
+    controller.requests.push(person2);
+    controller.requests.push(person3);
 
-    elevator.dispatch();
+    controller.dispatch();
 
-    const tracking = elevator.floorMovementHistory.getData();
+    const tracking = controller.floorMovementHistory.getData();
     assert.equal(tracking[0].floor, 1);
     assert.equal(tracking[1].floor, 2);
     assert.equal(tracking[2].floor, 3);
@@ -158,8 +161,8 @@ describe("Level 4: Multiple requests in order", () => {
     assert.equal(tracking[22].personName, "Person3");
     assert.equal(tracking[23].personName, "Person3");
 
-    assert.equal(elevator.requests.length, 0);
-    assert.equal(elevator.riders.length, 0);
-    assert.equal(elevator.currentFloor, 0);
+    assert.equal(controller.requests.length, 0);
+    assert.equal(controller.riders.length, 0);
+    assert.equal(controller.elevator.currentFloor, 0);
   });
 });
