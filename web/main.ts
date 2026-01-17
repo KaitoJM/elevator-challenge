@@ -1,17 +1,12 @@
 import Clock from "../app/Clock";
 import ElevatorController from "../app/ElevatorController";
+import MovementHistory, { FloorMovementTrack } from "../app/MovementHistory";
 import Person from "../app/Person";
 
 let onborders: Array<Person> = [];
 
 const removeOnboarder = (indx: number) => {
-  if (indx == 0) {
-    onborders = [];
-    listOnboarders();
-    return;
-  }
-
-  onborders = onborders.splice(indx, 1);
+  onborders.splice(indx, 1);
   listOnboarders();
 };
 
@@ -95,5 +90,99 @@ dispatchBtn.addEventListener("click", () => {
   });
 
   controller.dispatch();
-  console.log(controller.floorMovementHistory.getData());
+  playVisual(controller.floorMovementHistory.getData(), onborders);
 });
+
+const playVisual = (
+  history: Array<FloorMovementTrack>,
+  onboarders: Array<Person>
+) => {
+  const distinctFloors = [...new Set(history.map((item) => item.floor))];
+
+  generateElevatorFloors(distinctFloors, onboarders);
+  runElevator(history);
+};
+
+const generateElevatorFloors = (floors: number[], onborders: Person[]) => {
+  const floorList = document.getElementById("floor-list")!;
+
+  floorList.innerHTML = `${floors
+    .map(
+      (floor) => `<li class="floor" data-floor="${floor}">
+      <div class="floor-label">${floor}</div>
+      <div class="floor-container">
+        <img src="./person.png" class="person-indicator" />
+      </div>
+      <div class="floor-outside">
+        ${
+          onborders.find((person) => person.currentFloor === floor)
+            ? `<img src="./person.png" class="person-indicator" data-name="${
+                onborders.find((person) => person.currentFloor === floor)?.name
+              }" />`
+            : ``
+        }
+      </div>
+    </li>`
+    )
+    .join("")}`;
+};
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const runElevator = async (pathHistory: Array<FloorMovementTrack>) => {
+  for (const track of pathHistory) {
+    document.querySelectorAll(".floor").forEach((floorItem) => {
+      floorItem.classList.remove("active");
+    });
+
+    document
+      .querySelectorAll(".floor .floor-container .person-indicator")
+      .forEach((floorItem) => {
+        floorItem.classList.remove("show");
+      });
+
+    document.querySelectorAll(".floor").forEach((floorItem) => {
+      const floorNumber = Number((floorItem as HTMLElement).dataset.floor);
+
+      if (track.floor === floorNumber) {
+        // make elevator floor highlight
+        floorItem.classList.add("active");
+
+        if (track.personName !== undefined) {
+          // Show the riding person indicator if matched the current floor
+          const indicator = floorItem.querySelector(
+            ".floor-container .person-indicator"
+          ) as HTMLElement;
+
+          if (indicator) {
+            indicator.classList.add("show");
+          }
+
+          // Remove onboarding person indicator if matched the current floor
+          const onboarderindicator = floorItem.querySelector(
+            ".floor-outside .person-indicator"
+          ) as HTMLElement;
+
+          if (onboarderindicator) {
+            const onBoarderName = String(
+              (onboarderindicator as HTMLElement).dataset.name
+            );
+
+            if (onBoarderName == track.personName) {
+              onboarderindicator.remove();
+            }
+          }
+        }
+      }
+    });
+
+    await sleep(1500);
+  }
+
+  // remove elevator floor indicator at the end
+  document
+    .querySelectorAll(".floor .floor-container .person-indicator")
+    .forEach((floorItem) => {
+      floorItem.classList.remove("show");
+    });
+};

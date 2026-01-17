@@ -154,3 +154,74 @@ button.danger {
 .empty-state p {
   color: #a3a3a3;
 }
+
+.floor-list {
+  display: flex;
+  flex-direction: column-reverse;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.floor-list li {
+  flex: 1;
+  border-bottom: 1px solid #d5d5d5;
+  display: flex;
+  gap: 10px;
+}
+
+.floor-list li:last-child {
+  border-top: 1px solid #d5d5d5;
+}
+
+.floor-list li .floor-label {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  padding: 3px 5px;
+  border: 1px solid #ff9800;
+  color: #c67a0a;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  font-weight: bold;
+  background-color: #ffedb6;
+  margin-top: 10px;
+}
+
+.floor-list li .floor-container {
+  padding: 10px 20px;
+  border-left: 1px solid #d5d5d5;
+  border-right: 1px solid #d5d5d5;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.floor-list li.active .floor-container {
+  background-color: #ffccc8;
+}
+
+.floor-list li .floor-container .person-indicator {
+  display: none;
+}
+
+.floor-list li .floor-container .person-indicator.show {
+  display: block;
+}
+
+.floor-list li .floor-outside {
+  padding: 10px 20px;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.floor-list li .person-indicator {
+  width: 40px;
+  height: 40px;
+}
