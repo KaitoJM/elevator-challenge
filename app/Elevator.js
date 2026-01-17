@@ -1,8 +1,8 @@
 export default class Elevator {
-  currentFloor: number = 0;
-  stops: number = 0;
-  floorsTraversed: number = 0;
-  stoppedFlag: boolean = false;
+  currentFloor = 0;
+  stops = 0;
+  floorsTraversed = 0;
+  stoppedFlag = false;
 
   moveUp() {
     this.currentFloor++;
