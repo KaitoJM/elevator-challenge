@@ -50,12 +50,14 @@ button.danger {
 .container {
   display: flex;
   height: max-content;
+  box-sizing: border-box;
 }
 
 .container > * {
   flex: 1;
   height: 100vh;
   padding: 15px 30px;
+  box-sizing: border-box;
 }
 
 .container .form-view {
