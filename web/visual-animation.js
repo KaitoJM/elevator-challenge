@@ -1,96 +1,114 @@
 export default class VisualAnimation {
   constructor(history = [], onboarders = []) {
     this.history = history;
-    this.onboarders = onboarders;
-    this.floors = [...new Set(history.map((item) => item.floor))];
+    this.waiting = [...onboarders];
+    this.riding = [];
+    this.dropped = [];
+
+    this.floors = [...new Set(history.map((h) => h.floor))].sort(
+      (a, b) => a - b
+    );
+
+    this.floorBlueprint = this.floors.map((floor) => ({
+      floor,
+      onboarders: this.waiting.filter((p) => p.currentFloor === floor),
+      riding: [],
+      dropoffs: [],
+      active: false,
+    }));
   }
 
   play() {
-    this.generateElevatorFloors();
-    this.runElevator();
+    this.renderScene();
+    this.run();
   }
 
-  generateElevatorFloors() {
-    const floorList = document.getElementById("floor-list");
-    const onboarders = this.onboarders;
-
-    floorList.innerHTML = `${this.floors
-      .map(
-        (floor) => `<li class="floor" data-floor="${floor}">
-          <div class="floor-label">${floor}</div>
-          <div class="floor-container">
-            <img src="./person.png" class="person-indicator" />
-          </div>
-          <div class="floor-outside">
-            ${
-              onboarders.find((person) => person.currentFloor === floor)
-                ? `<img src="./person.png" class="person-indicator" data-name="${
-                    onboarders.find((person) => person.currentFloor === floor)
-                      ?.name
-                  }" />`
-                : ``
-            }
-          </div>
-        </li>`
-      )
-      .join("")}`;
-  }
-
-  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  async runElevator() {
+  async run() {
     for (const track of this.history) {
-      document.querySelectorAll(".floor").forEach((floorItem) => {
-        floorItem.classList.remove("active");
+      const floorIndex = this.floorBlueprint.findIndex(
+        (f) => f.floor === track.floor
+      );
+      const floor = this.floorBlueprint[floorIndex];
+
+      // activate floor
+      this.floorBlueprint.forEach((f) => {
+        f.active = false;
+        f.riding = []; // clear riding visuals
+        f.dropoffs = [];
       });
 
-      document
-        .querySelectorAll(".floor .floor-container .person-indicator")
-        .forEach((floorItem) => {
-          floorItem.classList.remove("show");
-        });
+      floor.active = true;
 
-      document.querySelectorAll(".floor").forEach((floorItem) => {
-        const floorNumber = Number(floorItem.dataset.floor);
+      if (track.stopped) {
+        /** DROP OFF **/
+        if (this.riding.length && this.riding[0].dropOffFloor === track.floor) {
+          floor.dropoffs = [...this.riding];
+          this.riding = [];
+        }
 
-        if (track.floor === floorNumber) {
-          // make elevator floor highlight
-          floorItem.classList.add("active");
+        /** PICK UP (FIFO) **/
+        if (this.riding.length === 0 && this.waiting.length) {
+          const next = this.waiting[0];
 
-          if (track.personName !== undefined) {
-            // Show the riding person indicator if matched the current floor
-            const indicator = floorItem.querySelector(
-              ".floor-container .person-indicator"
-            );
-
-            if (indicator) {
-              indicator.classList.add("show");
-            }
-
-            // Remove onboarding person indicator if matched the current floor
-            const onboarderindicator = floorItem.querySelector(
-              ".floor-outside .person-indicator"
-            );
-
-            if (onboarderindicator) {
-              const onBoarderName = String(onboarderindicator.dataset.name);
-
-              if (onBoarderName == track.personName) {
-                onboarderindicator.remove();
-              }
-            }
+          if (next.currentFloor === track.floor) {
+            this.riding.push(next);
+            this.waiting.shift();
+            floor.onboarders = floor.onboarders.filter((p) => p !== next);
           }
         }
-      });
+      }
 
+      // show riding ONLY on active floor
+      floor.riding = [...this.riding];
+
+      this.renderScene();
       await this.sleep(1500);
     }
+  }
 
-    // remove elevator floor indicator at the end
-    document
-      .querySelectorAll(".floor .floor-container .person-indicator")
-      .forEach((floorItem) => {
-        floorItem.classList.remove("show");
-      });
+  renderScene() {
+    const floorList = document.getElementById("floor-list");
+
+    floorList.innerHTML = this.floorBlueprint
+      .map(
+        (floor) => `
+        <li class="floor ${floor.active ? "active" : ""}" data-floor="${
+          floor.floor
+        }">
+          <div class="floor-label">${floor.floor}</div>
+
+          <div class="floor-waiting">
+            ${floor.onboarders
+              .map(
+                (p) =>
+                  `<img src="./person.png" class="person-indicator" data-name="${p.name}" />`
+              )
+              .join("")}
+          </div>
+
+          <div class="floor-container">
+            ${
+              floor.riding.length
+                ? `<img src="./person.png" class="person-indicator riding" />`
+                : ""
+            }
+          </div>
+
+          <div class="floor-outside">
+            ${floor.dropoffs
+              .map(
+                (p) =>
+                  `<img src="./person.png" class="person-indicator dropped" data-name="${p.name}" />`
+              )
+              .join("")}
+          </div>
+        </li>
+      `
+      )
+      .join("");
+  }
+
+  sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
