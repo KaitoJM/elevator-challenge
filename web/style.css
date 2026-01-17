@@ -1,0 +1,156 @@
+html body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+input[type="text"],
+input[type="number"] {
+  height: 30px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border: 1px solid #d8d8d8;
+  border-radius: 5px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: 2px solid #e7e8ff;
+}
+
+button {
+  height: 30px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border: 1px solid #495fdb;
+  border-radius: 5px;
+  background-color: #8eb7fd;
+  background-image: linear-gradient(1deg, #2196f3, #60c7f5);
+  box-shadow: inset 0px -1px 3px #3f51b5, 0px 1px 1px 0px #080f2e;
+  color: #243389;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+button.small {
+  height: 25px;
+  font-size: 0.8em;
+}
+
+button.danger {
+  border: 1px solid #ff8787;
+  background-color: #fd8e92;
+  background-image: linear-gradient(1deg, #ee5f5f, #ffdfe5);
+  box-shadow: inset 0px -1px 3px #b73030, 0px 1px 1px 0px #2e0808;
+  color: #5d1414;
+}
+
+.container {
+  display: flex;
+  height: max-content;
+}
+
+.container > * {
+  flex: 1;
+  height: 100vh;
+  padding: 15px 30px;
+}
+
+.container .form-view {
+  border-left: 1px solid #e2e2e2;
+}
+
+.container .form-view .form-container {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin: auto;
+}
+
+.container .form-view .onboarding-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.onboarding-list-ul table {
+  width: 100%;
+  border-spacing: 0;
+  margin-bottom: 20px;
+}
+
+.onboarding-list-ul table th {
+  font-size: 0.8em;
+  border-bottom: 1px solid #e7e7e7;
+  padding: 8px 10px;
+  text-align: right;
+}
+
+.onboarding-list-ul table th:first-child {
+  text-align: left;
+}
+
+.onboarding-list-ul table td {
+  text-align: left;
+  font-size: 0.8em;
+  border-bottom: 1px solid #e7e7e7;
+  padding: 8px 10px;
+}
+
+.onboarding-list-ul table td.list-person-name {
+  width: 40%;
+}
+
+.onboarding-list-ul table td.list-person-currentl-floor,
+.onboarding-list-ul table td.list-person-dropoff-floor {
+  text-align: right;
+}
+
+.onboard-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.onboard-form .form-field-container {
+  display: flex;
+  gap: 10px;
+}
+
+.onboard-form .form-field-container .onboard-form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.onboard-form .form-field-container .onboard-form-field-group label {
+  font-size: 0.9em;
+  color: #333;
+}
+
+.onboard-form .action-container {
+  display: flex;
+  justify-content: end;
+}
+
+.onboard-form .action-container button {
+  width: 150px;
+}
+
+.empty-state {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  border: 1px dashed #dadada;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.empty-state p {
+  color: #a3a3a3;
+}

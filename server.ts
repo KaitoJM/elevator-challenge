@@ -9,6 +9,7 @@ const app = express();
 const PORT = 3005;
 
 // Serve browser files
+app.use(express.static(path.join(process.cwd(), "web")));
 app.use("/web", express.static(path.join(process.cwd(), "dist/web")));
 
 app.get("/", (_req, res) => {

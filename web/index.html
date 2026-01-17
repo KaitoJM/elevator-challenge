@@ -2,9 +2,45 @@
 <html>
   <head>
     <title>Elevator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./style.css" rel="stylesheet" />
   </head>
   <body>
-    <button id="btn">Dispatch</button>
+    <div class="container">
+      <div class="elevator-view"></div>
+      <div class="form-view">
+        <div class="form-container">
+          <div class="onboarding-list">
+            <div id="onboarding-list-ul" class="onboarding-list-ul"></div>
+            <form class="onboard-form" id="onboardForm">
+              <div class="form-field-container">
+                <div class="onboard-form-field-group" style="flex: 1">
+                  <label>Name</label>
+                  <input type="text" name="personName" />
+                </div>
+                <div class="onboard-form-field-group">
+                  <label>Pickup Floor</label>
+                  <input type="number" name="currentFloor" />
+                </div>
+                <div class="onboard-form-field-group">
+                  <label>Drop Off Floor</label>
+                  <input type="number" name="dropOffFloor" />
+                </div>
+              </div>
+              <div class="action-container">
+                <button type="submit">Add</button>
+              </div>
+            </form>
+          </div>
+          <button id="btn-dispatch">Dispatch</button>
+        </div>
+      </div>
+    </div>
 
     <script type="module" src="/web/main.js"></script>
   </body>
