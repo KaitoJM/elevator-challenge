@@ -1,11 +1,9 @@
-import Clock from "../app/Clock";
-import ElevatorController from "../app/ElevatorController";
-import MovementHistory, { FloorMovementTrack } from "../app/MovementHistory";
-import Person from "../app/Person";
+import Clock from "../app/Clock.js";
+import ElevatorController from "../app/ElevatorController.js";
 
-let onborders: Array<Person> = [];
+let onborders = [];
 
-const removeOnboarder = (indx: number) => {
+const removeOnboarder = (indx) => {
   onborders.splice(indx, 1);
   listOnboarders();
 };
@@ -50,7 +48,7 @@ const listOnboarders = () => {
 
   document.querySelectorAll(".btn-remove-onboarder").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const index = Number((e.currentTarget as HTMLElement).dataset.index);
+      const index = Number(e.currentTarget.dataset.index);
       removeOnboarder(index);
     });
   });
@@ -58,13 +56,11 @@ const listOnboarders = () => {
 
 listOnboarders();
 
-const addOnBoarderForm = document.getElementById(
-  "onboardForm"
-) as HTMLFormElement;
+const addOnBoarderForm = document.getElementById("onboardForm");
 addOnBoarderForm.addEventListener("submit", (e) => {
   const formData = new FormData(addOnBoarderForm);
 
-  const name = formData.get("personName") as string;
+  const name = formData.get("personName");
   const currentFloor = Number(formData.get("currentFloor"));
   const dropOffFloor = Number(formData.get("dropOffFloor"));
 
@@ -81,7 +77,7 @@ addOnBoarderForm.addEventListener("submit", (e) => {
   e.preventDefault();
 });
 
-const dispatchBtn = document.getElementById("btn-dispatch")!;
+const dispatchBtn = document.getElementById("btn-dispatch");
 dispatchBtn.addEventListener("click", () => {
   const controller = new ElevatorController(new Clock());
 
@@ -93,18 +89,15 @@ dispatchBtn.addEventListener("click", () => {
   playVisual(controller.floorMovementHistory.getData(), onborders);
 });
 
-const playVisual = (
-  history: Array<FloorMovementTrack>,
-  onboarders: Array<Person>
-) => {
+const playVisual = (history, onboarders) => {
   const distinctFloors = [...new Set(history.map((item) => item.floor))];
 
   generateElevatorFloors(distinctFloors, onboarders);
   runElevator(history);
 };
 
-const generateElevatorFloors = (floors: number[], onborders: Person[]) => {
-  const floorList = document.getElementById("floor-list")!;
+const generateElevatorFloors = (floors, onborders) => {
+  const floorList = document.getElementById("floor-list");
 
   floorList.innerHTML = `${floors
     .map(
@@ -127,9 +120,9 @@ const generateElevatorFloors = (floors: number[], onborders: Person[]) => {
     .join("")}`;
 };
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const runElevator = async (pathHistory: Array<FloorMovementTrack>) => {
+const runElevator = async (pathHistory) => {
   for (const track of pathHistory) {
     document.querySelectorAll(".floor").forEach((floorItem) => {
       floorItem.classList.remove("active");
@@ -142,7 +135,7 @@ const runElevator = async (pathHistory: Array<FloorMovementTrack>) => {
       });
 
     document.querySelectorAll(".floor").forEach((floorItem) => {
-      const floorNumber = Number((floorItem as HTMLElement).dataset.floor);
+      const floorNumber = Number(floorItem.dataset.floor);
 
       if (track.floor === floorNumber) {
         // make elevator floor highlight
@@ -152,7 +145,7 @@ const runElevator = async (pathHistory: Array<FloorMovementTrack>) => {
           // Show the riding person indicator if matched the current floor
           const indicator = floorItem.querySelector(
             ".floor-container .person-indicator"
-          ) as HTMLElement;
+          );
 
           if (indicator) {
             indicator.classList.add("show");
@@ -161,12 +154,10 @@ const runElevator = async (pathHistory: Array<FloorMovementTrack>) => {
           // Remove onboarding person indicator if matched the current floor
           const onboarderindicator = floorItem.querySelector(
             ".floor-outside .person-indicator"
-          ) as HTMLElement;
+          );
 
           if (onboarderindicator) {
-            const onBoarderName = String(
-              (onboarderindicator as HTMLElement).dataset.name
-            );
+            const onBoarderName = String(onboarderindicator.dataset.name);
 
             if (onBoarderName == track.personName) {
               onboarderindicator.remove();
