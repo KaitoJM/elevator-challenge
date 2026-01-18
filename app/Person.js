@@ -4,7 +4,7 @@ export default class Person {
   currentFloor;
   dropOffFloor;
 
-  constructor(id, name, currentFloor, dropOffFloor) {
+  constructor(name, currentFloor, dropOffFloor, id = null) {
     (this.id = id),
       (this.name = name),
       (this.currentFloor = currentFloor),
