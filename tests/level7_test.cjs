@@ -1,30 +1,33 @@
-import Elevator from "../app/Elevator";
-import ElevatorController from "../app/ElevatorController";
-import Person from "../app/Person";
-import * as chai from "chai";
-import SkipDuplicatePickupPipe from "../app/services/pipelines/pipes/SkipDuplicatePickup.pipe";
-import RecordFloorHistoryContext from "../app/services/pipelines/contexts/RecordFloorHistory.context";
-import MovementHistory from "../app/MovementHistory";
-import SkipIdenticalLastTrackPipe from "../app/services/pipelines/pipes/SkipIdenticalLastTrack.pipe";
-import MergeDropOffPipe from "../app/services/pipelines/pipes/MergeDropOff.pipe";
-import AppendTrackPipe from "../app/services/pipelines/pipes/AppendNewTrack.pipe";
-
-const { assert } = chai;
+const assert = require("chai").assert;
+const ElevatorController = require("../app/ElevatorController").default;
+const Elevator = require("../app/Elevator").default;
+const Person = require("../app/Person").default;
+const SkipDuplicatePickupPipe =
+  require("../app/services/pipelines/pipes/SkipDuplicatePickup.pipe").default;
+const SkipIdenticalLastTrackPipe =
+  require("../app/services/pipelines/pipes/SkipIdenticalLastTrack.pipe").default;
+const MergeDropOffPipe =
+  require("../app/services/pipelines/pipes/MergeDropOff.pipe").default;
+const AppendTrackPipe =
+  require("../app/services/pipelines/pipes/AppendNewTrack.pipe").default;
+const RecordFloorHistoryContext =
+  require("../app/services/pipelines/contexts/RecordFloorHistory.context").default;
+const MovementHistory = require("../app/MovementHistory").default;
 
 class FakeClock {
-  private hour: number;
+  hour;
 
-  constructor(hour: number = 10) {
+  constructor(hour = 10) {
     this.hour = hour;
   }
 
-  getHour(): number {
+  getHour() {
     return this.hour;
   }
 }
 
 describe("Level 7: Added Feature Test (Floor history tracking)", () => {
-  let controller: ElevatorController;
+  let controller;
 
   beforeEach(() => {
     controller = new ElevatorController(new FakeClock(10));
@@ -71,7 +74,7 @@ describe("Level 7: Added Feature Test (Floor history tracking)", () => {
 });
 
 describe("Level 7: Pipe - SkipDuplicatePickupPipe", () => {
-  let pipe: SkipDuplicatePickupPipe;
+  let pipe;
 
   beforeEach(() => {
     pipe = new SkipDuplicatePickupPipe();
@@ -135,7 +138,7 @@ describe("Level 7: Pipe - SkipDuplicatePickupPipe", () => {
 });
 
 describe("Level 7: Pipe - SkipIdenticalLastTrackPipe", () => {
-  let pipe: SkipIdenticalLastTrackPipe;
+  let pipe;
 
   beforeEach(() => {
     pipe = new SkipIdenticalLastTrackPipe();
@@ -242,7 +245,7 @@ describe("Level 7: Pipe - SkipIdenticalLastTrackPipe", () => {
 });
 
 describe("Level 7: Pipe - MergeDropOffPipe", () => {
-  let pipe: MergeDropOffPipe;
+  let pipe;
 
   beforeEach(() => {
     pipe = new MergeDropOffPipe();
@@ -317,7 +320,7 @@ describe("Level 7: Pipe - MergeDropOffPipe", () => {
 });
 
 describe("Level 7: Pipe - AppendTrackPipe", () => {
-  let pipe: AppendTrackPipe;
+  let pipe;
 
   beforeEach(() => {
     pipe = new AppendTrackPipe();

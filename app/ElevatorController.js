@@ -1,23 +1,22 @@
-import Elevator from "./Elevator";
-import Clock from "./Clock";
-import LobbyPolicy from "./LobbyPolicy";
-import MovementHistory from "./MovementHistory";
-import Person from "./Person";
-import RecordFloorHistoryContext from "./services/pipelines/contexts/RecordFloorHistory.context";
-import RecordFloorHistoryService from "./services/RecordFloorHistory.service";
+import LobbyPolicy from "./LobbyPolicy.js";
+import MovementHistory from "./MovementHistory.js";
+import Elevator from "./Elevator.js";
+import Person from "./Person.js";
+import RecordFloorHistoryContext from "./services/pipelines/contexts/RecordFloorHistory.context.js";
+import RecordFloorHistoryService from "./services/RecordFloorHistory.service.js";
 
 export default class ElevatorController {
-  requests: Array<Person> = [];
-  riders: Array<Person> = [];
-  activePerson: Person | null = null;
-  elevator: Elevator;
+  requests = [];
+  riders = [];
+  activePerson = null;
+  elevator;
 
-  clock: Clock;
-  lobbyPolicy: LobbyPolicy;
-  floorMovementHistory: MovementHistory;
-  createHistoryService: RecordFloorHistoryService;
+  clock;
+  lobbyPolicy;
+  floorMovementHistory;
+  createHistoryService;
 
-  constructor(clock: Clock, lobbyPolicy?: LobbyPolicy) {
+  constructor(clock = null, lobbyPolicy = null) {
     this.clock = clock || new Clock();
     this.lobbyPolicy = lobbyPolicy || new LobbyPolicy();
     this.floorMovementHistory = new MovementHistory();
@@ -34,14 +33,14 @@ export default class ElevatorController {
     this.handleIdleState();
   }
 
-  handleRequest(person: Person) {
+  handleRequest(person) {
     this.moveToFloor(person.currentFloor);
     this.pickup(person);
     this.moveToFloor(person.dropOffFloor);
     this.dropOff(person);
   }
 
-  moveToFloor(targetFloor: number) {
+  moveToFloor(targetFloor) {
     while (this.elevator.currentFloor !== targetFloor) {
       this.elevator.currentFloor < targetFloor
         ? this.elevator.moveUp()
@@ -54,7 +53,7 @@ export default class ElevatorController {
     }
   }
 
-  pickup(person: Person) {
+  pickup(person) {
     this.activePerson = person;
     this.elevator.stoppedFlag = true;
     this.riders.push(person);
@@ -62,7 +61,7 @@ export default class ElevatorController {
     this.recordTrack();
   }
 
-  dropOff(person: Person) {
+  dropOff(person) {
     this.elevator.stoppedFlag = true;
     this.riders = this.riders.filter((r) => r !== person);
     this.activePerson = null;

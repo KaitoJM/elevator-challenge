@@ -1,8 +1,5 @@
-import { PipeResult, RecordHistoryPipe } from "../RecordFloorHistory.pipeline";
-import RecordFloorHistoryContext from "../contexts/RecordFloorHistory.context";
-
-export default class MergeDropOffPipe implements RecordHistoryPipe {
-  handle(ctx: RecordFloorHistoryContext): PipeResult {
+export default class MergeDropOffPipe {
+  handle(ctx) {
     const last = ctx.lastTrack;
     if (!last) return { type: "continue" };
 

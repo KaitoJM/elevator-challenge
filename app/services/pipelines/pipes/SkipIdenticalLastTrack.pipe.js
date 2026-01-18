@@ -1,8 +1,5 @@
-import { PipeResult, RecordHistoryPipe } from "../RecordFloorHistory.pipeline";
-import RecordFloorHistoryContext from "../contexts/RecordFloorHistory.context";
-
-export default class SkipIdenticalLastTrackPipe implements RecordHistoryPipe {
-  handle(ctx: RecordFloorHistoryContext): PipeResult {
+export default class SkipIdenticalLastTrackPipe {
+  handle(ctx) {
     if (!ctx.lastTrack || !ctx.person) {
       return { type: "continue" };
     }

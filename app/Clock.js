@@ -1,5 +1,5 @@
 export default class Clock {
-  getHour(): number {
+  getHour() {
     return new Date().getHours();
   }
 }

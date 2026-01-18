@@ -1,24 +1,22 @@
-import Elevator from "../app/Elevator";
-import ElevatorController from "../app/ElevatorController";
-import Person from "../app/Person";
-import * as chai from "chai";
-
-const { assert } = chai;
+const assert = require("chai").assert;
+const ElevatorController = require("../app/ElevatorController").default;
+const Elevator = require("../app/Elevator").default;
+const Person = require("../app/Person").default;
 
 class FakeClock {
-  private hour: number;
+  hour;
 
-  constructor(hour: number = 10) {
+  constructor(hour = 10) {
     this.hour = hour;
   }
 
-  getHour(): number {
+  getHour() {
     return this.hour;
   }
 }
 
 describe("Utility methods", () => {
-  let controller: ElevatorController;
+  let controller;
 
   beforeEach(() => {
     controller = new ElevatorController(new FakeClock(10));

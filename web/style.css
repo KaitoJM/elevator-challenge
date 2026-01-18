@@ -50,12 +50,14 @@ button.danger {
 .container {
   display: flex;
   height: max-content;
+  box-sizing: border-box;
 }
 
 .container > * {
   flex: 1;
   height: 100vh;
   padding: 15px 30px;
+  box-sizing: border-box;
 }
 
 .container .form-view {
@@ -155,12 +157,20 @@ button.danger {
   color: #a3a3a3;
 }
 
+.elevator-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .floor-list {
   display: flex;
   flex-direction: column-reverse;
   list-style-type: none;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 .floor-list li {
@@ -204,12 +214,13 @@ button.danger {
   background-color: #ffccc8;
 }
 
-.floor-list li .floor-container .person-indicator {
-  display: none;
-}
-
-.floor-list li .floor-container .person-indicator.show {
-  display: block;
+.floor-list li .floor-waiting {
+  padding: 10px 20px;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
 }
 
 .floor-list li .floor-outside {
@@ -217,7 +228,7 @@ button.danger {
   height: 50px;
   width: 50px;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 }
 
