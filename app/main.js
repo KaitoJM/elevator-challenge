@@ -1,13 +1,26 @@
-import Clock from "../app/Clock.js";
-import ElevatorController from "../app/ElevatorController.js";
+import Clock from "./Clock.js";
+import ElevatorController from "./ElevatorController.js";
 import VisualAnimation from "./visual-animation.js";
+import OnboardingService from "./services/Onboarding.service.js";
 
 let onborders = [];
 
-const removeOnboarder = (indx) => {
-  onborders.splice(indx, 1);
-  listOnboarders();
-};
+async function loadOnboarders() {
+  const data = await OnboardingService.getAll();
+  onborders = data;
+}
+
+async function addOnboarder(newPerson) {
+  const created = await OnboardingService.create(newPerson);
+  return created;
+}
+
+async function deleteOnboarder(id) {
+  const result = await OnboardingService.delete(id);
+  console.log("Deleted:", result);
+}
+
+await loadOnboarders();
 
 const listOnboarders = () => {
   const listContainer = document.getElementById("onboarding-list-ul");
@@ -22,13 +35,13 @@ const listOnboarders = () => {
       return;
     }
 
-    onborders.forEach((person, indx) => {
+    onborders.forEach((person) => {
       listItem += `<tr>
         <td class="list-person-name">${person.name}</td>
         <td class="list-person-currentl-floor">${person.currentFloor}</td>
         <td class="list-person-dropoff-floor">${person.dropOffFloor}</td>
         <td>
-          <button data-index="${indx}" class="btn-remove-onboarder danger small">Remove</button>
+          <button data-id="${person.id}" class="btn-remove-onboarder danger small">Remove</button>
         </td>
         </tr>`;
     });
@@ -49,33 +62,50 @@ const listOnboarders = () => {
 
   document.querySelectorAll(".btn-remove-onboarder").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const index = Number(e.currentTarget.dataset.index);
-      removeOnboarder(index);
+      const personId = Number(e.currentTarget.dataset.id);
+      const ans = confirm("Delete this person from request?");
+      if (ans) {
+        removeOnboarder(personId);
+      }
     });
   });
 };
 
 listOnboarders();
 
+const removeOnboarder = async (id) => {
+  try {
+    await deleteOnboarder(id);
+    await loadOnboarders();
+    listOnboarders();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const addOnBoarderForm = document.getElementById("onboardForm");
-addOnBoarderForm.addEventListener("submit", (e) => {
+addOnBoarderForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
   const formData = new FormData(addOnBoarderForm);
 
   const name = formData.get("personName");
   const currentFloor = Number(formData.get("currentFloor"));
   const dropOffFloor = Number(formData.get("dropOffFloor"));
 
-  onborders.push({
+  const params = {
     name: name,
     currentFloor: currentFloor,
     dropOffFloor: dropOffFloor,
-  });
+  };
 
-  addOnBoarderForm.reset();
-
-  listOnboarders();
-
-  e.preventDefault();
+  try {
+    await addOnboarder(params);
+    onborders.push(params);
+    addOnBoarderForm.reset();
+    listOnboarders();
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const dispatchBtn = document.getElementById("btn-dispatch");
