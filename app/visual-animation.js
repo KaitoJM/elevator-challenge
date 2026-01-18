@@ -81,7 +81,7 @@ export default class VisualAnimation {
             ${floor.onboarders
               .map(
                 (p) =>
-                  `<img src="./person.png" class="person-indicator" data-name="${p.name}" />`
+                  `<img src="./app/assets/person.png" class="person-indicator" data-name="${p.name}" />`
               )
               .join("")}
           </div>
@@ -89,7 +89,7 @@ export default class VisualAnimation {
           <div class="floor-container">
             ${
               floor.riding.length
-                ? `<img src="./person.png" class="person-indicator riding" />`
+                ? `<img src="./app/assets/person.png" class="person-indicator riding" />`
                 : ""
             }
           </div>
@@ -98,7 +98,7 @@ export default class VisualAnimation {
             ${floor.dropoffs
               .map(
                 (p) =>
-                  `<img src="./person.png" class="person-indicator dropped" data-name="${p.name}" />`
+                  `<img src="./app/assets/person.png" class="person-indicator dropped" data-name="${p.name}" />`
               )
               .join("")}
           </div>

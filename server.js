@@ -9,11 +9,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3005;
 
-// Serve static files from app/web
-const webDir = path.join(__dirname, "web");
-app.use(express.static(webDir));
-
-app.use("/app", express.static(path.join(__dirname, "app")));
+const webDir = path.join(__dirname, "app");
+app.use("/app", express.static(webDir));
 
 // Default route -> index.html
 app.get("/", (req, res) => {
